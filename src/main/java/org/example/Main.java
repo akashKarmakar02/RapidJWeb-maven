@@ -4,7 +4,7 @@ import org.example.RapidJWeb.db.Database;
 import org.example.RapidJWeb.server.RapidWebServer;
 
 import java.io.IOException;
-
+import java.util.List;
 import static java.lang.System.out;
 
 public class Main {
@@ -12,12 +12,17 @@ public class Main {
         var server = new RapidWebServer(8000);
         var db = new Database("database");
 
-        server.get("/", ((httpRequest, httpResponse) -> {
-            var persons = db.getAll(Person.class);
+        server.get("/", ((_, httpResponse) -> {
+            List<Person> persons = db.getAll(Person.class);
             var data = new ResponseData(persons);
 
 
             httpResponse.render("index", data);
+        }));
+
+        server.get("/delete/{id:int}", ((httpRequest, httpResponse) -> {
+            out.println(httpRequest);
+            httpResponse.redirect("/");
         }));
 
         server.post("/", ((httpRequest, httpResponse) -> {
@@ -30,8 +35,5 @@ public class Main {
         }));
 
         server.run();
-//        var arr = new int[]{};
-//
-//        out.println(arr instanceof Iterable);
     }
 }
