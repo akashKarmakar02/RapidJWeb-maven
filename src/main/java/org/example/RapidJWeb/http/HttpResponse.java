@@ -44,12 +44,10 @@ public class HttpResponse {
 
         try {
             Path path = Paths.get("src/main/resources/templates/" + filePath);
-            out.println(path);
-            String templateContent = Files.readString(path);
 
 
             // Set the response
-            this.response = templateContent;
+            this.response = Files.readString(path);
         } catch (IOException e) {
             this.response = "<h1>Template name is invalid " + filePath + " </h1>";
         }
