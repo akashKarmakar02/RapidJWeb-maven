@@ -1,7 +1,6 @@
 package org.example.RapidJWeb.template;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -116,10 +115,12 @@ public class DjangoTemplating {
             String iterableName = matcher.group(2);
             String forContent = matcher.group(3);
 
+
             Object iterableObject = getValueFromObject(data, iterableName);
+            StringBuilder loopResult;
             switch (detectIterableType(iterableObject)) {
                 case ARRAY:
-                    StringBuilder loopResult = new StringBuilder();
+                    loopResult = new StringBuilder();
                     for (Object item : (Object[]) iterableObject) {
                         loopResult.append(renderForLoopContent(forContent, loopVariable, item));
                     }
@@ -142,8 +143,18 @@ public class DjangoTemplating {
     }
 
     private String renderForLoopContent(String forContent, String loopVariable, Object item) {
-        forContent = forContent.replaceAll("\\{\\{\\s*" + loopVariable + "\\s*}}", item.toString());
-        forContent = forContent.replaceAll(loopVariable,"\"" + item + "\"");
+        var variables = extractVariables(forContent);
+
+        for (var variable: variables) {
+            if (variable.contains(".")) {
+                var property = variable.split("\\.")[1];
+                Object value = getValueFromObject(item, property);
+                forContent = forContent.replaceAll("\\{\\{\\s*" + variable + "\\s*}}", value.toString());
+            } else {
+                forContent = forContent.replaceAll("\\{\\{\\s*" + variable + "\\s*}}", item.toString());
+            }
+        }
+
         return forContent;
     }
 
