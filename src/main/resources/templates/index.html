@@ -3,21 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html,
+        body,
+        :root {
+            height: 100%;
+        }
+    </style>
 </head>
-<body>
-<form action="/" method="post">
-    <label for="name">Name: </label>
-    <input type="text" name="name" id="name">
-    <label for="age">Age: </label>
-    <input type="number" name="age" id="age">
-    <button type="submit">Submit</button>
-</form>
-
-<ul>
-    {% for person in persons %}
-        <li>{{ person }}</li>
-    {% endfor %}
-</ul>
+<body class="max-w-7xl mx-auto h-full flex items-center justify-center">
+    <div>
+        <form action="/" method="post">
+            <label for="name">Name: </label>
+            <input type="text" name="name" id="name" class="border px-3 py-1 rounded-md border-black">
+            <label for="age">Age: </label>
+            <input type="number" name="age" id="age" class="border px-3 py-1 rounded-md border-black">
+            <button type="submit" class="bg-slate-700 text-white rounded-md px-4 py-2">Submit</button>
+        </form>
+    
+        <div class="grid gap-2 mt-5">
+            {% for person in persons %}
+                <div class="shadow border px-3 py-1 rounded-md flex justify-between items-center">
+                    <div>
+                        <div>Name: {{ person.name }}</div>
+                        <div>Age: {{ person.age }}</div>
+                    </div>
+                    <a href="/delete/{{ person.id }}" class="bg-slate-700 text-white rounded-md px-4 py-2">Delete</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 
 </body>
 </html>
