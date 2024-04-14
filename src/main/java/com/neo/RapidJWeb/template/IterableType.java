@@ -1,4 +1,4 @@
-package org.example.RapidJWeb.template;
+package com.neo.RapidJWeb.template;
 
 enum IterableType {
     ARRAY,

@@ -1,14 +1,13 @@
-package org.example.RapidJWeb.http;
+package com.neo.RapidJWeb.http;
 
 
-import org.example.RapidJWeb.template.DjangoTemplating;
+import com.neo.RapidJWeb.template.DjangoTemplating;
+import com.neo.RapidJWeb.Config;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import static java.lang.System.out;
 
 
 public class HttpResponse {
@@ -27,7 +26,7 @@ public class HttpResponse {
         String filePath = template + ".html";
 
         try {
-            Path path = Paths.get("src/main/resources/templates/" + filePath);
+            Path path = Paths.get(Config.BASE_DIR + "templates/" + filePath);
             String templateContent = Files.readString(path);
 
             templateContent = templatingEngine.parse(templateContent, data);
@@ -43,7 +42,7 @@ public class HttpResponse {
         String filePath = template + ".html";
 
         try {
-            Path path = Paths.get("src/main/resources/templates/" + filePath);
+            Path path = Paths.get( Config.BASE_DIR + "templates/" + filePath);
 
 
             // Set the response
@@ -79,4 +78,5 @@ public class HttpResponse {
     public String getRedirectURL() {
         return this.redirectURL;
     }
+
 }

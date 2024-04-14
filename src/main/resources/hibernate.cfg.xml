@@ -1,6 +1,0 @@
-<hibernate-configuration>
-    <session-factory>
-        <property name="hibernate.connection.driver_class">org.sqlite.JDBC</property>
-        <property name="hibernate.connection.url">jdbc:sqlite:database.db</property>
-    </session-factory>
-</hibernate-configuration>

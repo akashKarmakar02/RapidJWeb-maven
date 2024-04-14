@@ -1,4 +1,4 @@
-package org.example.RapidJWeb.template;
+package com.neo.RapidJWeb.template;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +66,7 @@ public class DjangoTemplating {
             } if (variable == null) {
                 value = Optional.of(matcher.group(1));
             }
-            out.println("Value: " + value + "\nVariable: " + variable + "\n");
+//            out.println("Value: " + value + "\nVariable: " + variable + "\n");
 
             String ifContent = matcher.group(6);
             String elseContent = matcher.group(7);
@@ -74,7 +74,6 @@ public class DjangoTemplating {
             Object variableValue;
 
             if (value.isEmpty()) {
-                out.println("Here\n");
                 variableValue = getValueFromObject(data, variable);
             } else {
                 variableValue = value.get();
@@ -90,7 +89,6 @@ public class DjangoTemplating {
             if (elseContent == null) {
                 elseContent = "";
             }
-            out.println(ifContent);
             if (toRender) {
                 matcher.appendReplacement(result, ifContent);
             }
@@ -139,21 +137,23 @@ public class DjangoTemplating {
         }
 
         matcher.appendTail(result);
+
         return result.toString();
     }
 
     private String renderForLoopContent(String forContent, String loopVariable, Object item) {
         var variables = extractVariables(forContent);
-
         for (var variable: variables) {
             if (variable.contains(".")) {
                 var property = variable.split("\\.")[1];
                 Object value = getValueFromObject(item, property);
                 forContent = forContent.replaceAll("\\{\\{\\s*" + variable + "\\s*}}", value.toString());
+                forContent = forContent.replaceAll("\\{%\\s*if\\s+" + variable + "\\\\s*(==|>=|<=|>|<)\\\\s*\"[^\"]*\"\\\\s*%}","\"" + value + "\"");
             } else {
                 forContent = forContent.replaceAll("\\{\\{\\s*" + variable + "\\s*}}", item.toString());
             }
         }
+
 
         return forContent;
     }
