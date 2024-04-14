@@ -61,20 +61,31 @@ public class DjangoTemplating {
             String operator = matcher.group(3);
             String valueString = matcher.group(4);
             Optional<Integer> valueInt = Optional.empty();
+            Optional<Integer> variableInt = Optional.empty();
             if (valueString == null) {
                 valueInt = Optional.of(Integer.parseInt(matcher.group(5)));
-            } if (variable == null) {
-                value = Optional.of(matcher.group(1));
             }
-//            out.println("Value: " + value + "\nVariable: " + variable + "\n");
+            if (variable == null) {
+                value = Optional.of(matcher.group(1));
+            } else {
+                try {
+                    variableInt = Optional.of(Integer.parseInt(variable));
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
 
             String ifContent = matcher.group(6);
             String elseContent = matcher.group(7);
 
             Object variableValue;
 
-            if (value.isEmpty()) {
+            if (value.isEmpty() && variableInt.isEmpty()) {
                 variableValue = getValueFromObject(data, variable);
+            } else if (variableInt.isPresent()) {
+                variableValue = variableInt.get();
             } else {
                 variableValue = value.get();
             }
@@ -143,6 +154,28 @@ public class DjangoTemplating {
 
     private String renderForLoopContent(String forContent, String loopVariable, Object item) {
         var variables = extractVariables(forContent);
+        Pattern pattern = Pattern.compile("\\{%\\s*if\\s+(?:\"(\\w+)\"|([^\"\\s]+))\\s*(>=|<=|>|<|==)\\s*(?:\"(\\w+)\"|([^\"\\s]+))\\s*%}(.*?)(?:\\{%\\s*else\\s*%}(.*?))?\\{%\\s*endif\\s*%}", Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(forContent);
+        StringBuilder result = new StringBuilder();
+
+        while(matcher.find()) {
+            String variable = matcher.group(2);
+            if (variable != null) {
+                var variable2 = getValueFromObject(item, variable.split("\\.")[1]);
+                String variable3 = matcher.group(3);
+                String variable4 = matcher.group(4);
+                String variable5 = matcher.group(5);
+                String variable6 = matcher.group(6);
+                String variable7 = matcher.group(7);
+
+                String modifiedMatch = String.format("{%% if %s %s %s %%}%s{%% else %%}%s{%% endif %%}",
+                        variable2 instanceof Integer ? variable2 : "\"" + variable2 + "\"", variable3, variable4 == null ? variable5 : "\"" + variable4 + "\"", variable6, variable7);
+
+                matcher.appendReplacement(result, modifiedMatch);
+            }
+        }
+
+        forContent = String.valueOf(result);
         for (var variable: variables) {
             if (variable.contains(".")) {
                 var property = variable.split("\\.")[1];
