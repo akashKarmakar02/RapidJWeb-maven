@@ -24,12 +24,9 @@ class RouteHandler implements HttpHandler {
     private String regex;
     private List<String> params;
 
-    // Modify the constructor to initialize pathParams
     private RouteHandler(String route) {
         this.route = route;
     }
-
-    // Add a method to parse and extract path parameters
 
     public RouteHandler get(BiConsumer<HttpRequest, HttpResponse> handler, ArrayList<String> pathParams, String regex) {
         this.getHandler = handler;
@@ -134,8 +131,6 @@ class RouteHandler implements HttpHandler {
             }
         }
     }
-
-
 
     private void handleGetRequest(HttpExchange exchange) throws IOException {
         HttpRequest httpRequest;

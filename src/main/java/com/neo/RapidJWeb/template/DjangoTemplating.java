@@ -6,8 +6,6 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.lang.System.out;
-
 
 public class DjangoTemplating {
 
@@ -70,8 +68,8 @@ public class DjangoTemplating {
             } else {
                 try {
                     variableInt = Optional.of(Integer.parseInt(variable));
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
+                } catch (NumberFormatException ignored) {
+
                 }
             }
 
@@ -201,15 +199,14 @@ public class DjangoTemplating {
         }
     }
 
-
     public static boolean evaluateCondition(String operator, Object value1, Object value2) {
         if (value1.getClass() != value2.getClass()) {
             return false;
         }
         return switch (operator) {
-            case ">" -> compareValues(value1, value2) > 0;
+            case ">" -> compareValues(value1, value2) < 0;
             case ">=" -> compareValues(value1, value2) >= 0;
-            case "<" -> compareValues(value1, value2) < 0;
+            case "<" -> compareValues(value1, value2) > 0;
             case "<=" -> compareValues(value1, value2) <= 0;
             case "==" -> compareValues(value1, value2) == 0;
             default -> false;
